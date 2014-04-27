@@ -1,48 +1,198 @@
-<?php if(!defined('VALID_CMS')){die('ACCESS DENIED');}class cms_model_poputi{function __construct(){$this->form__=cmsDatabase::getInstance();}public function install(){return true;}public static function getConfig(){$form___=cmsCore::getinstance();$form____=$form___->loadComponentConfig("poputi");return $form____;}public function errors_pole($form_____){if($form_____['otkuda']==''){$form______ .= 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РїРѕР»Рµ "РћС‚РєСѓРґР°".<br>';}if($form_____['kuda']==''){$form______ .= 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РїРѕР»Рµ "РљСѓРґР°".<br>';}if($form_____['dni']==''){$form______ .= 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РїРѕР»Рµ "Р”РЅРё РЅРµРґРµР»Рё".<br>';}if($form_____['time_tuda']==''){$form______ .= 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РїРѕР»Рµ "РћС‚РїСЂР°РІР»РµРЅРёРµ С‚СѓРґР°".<br>';}if($form_____['mobile']==''){$form______ .= 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РїРѕР»Рµ "РљРѕРЅС‚Р°РєС‚РЅС‹Р№ С‚РµР»РµС„РѕРЅ".<br>';}return $form______;}public function editMarshrut($form_____,$form_______){$form________=cmsUser::getInstance();$form__=cmsDatabase::getInstance();$form_________=array('0','0','0','0','0','0','0');for($form__________=0;$form__________<=6;$form__________++){$form_________[$form_____['dni'][$form__________]-1]=$form_____['dni'][$form__________];$form___________ .= $form_________[$form__________] .'.';}$form___________=substr($form___________,0,-1);$form____________="UPDATE  `cms_poputi` SET `otkuda` = '{$form_____['otkuda']}' , `kuda`='{$form_____['kuda']}' ,`marshrut`='{$form_____['marshrut']}' , `napravlenie`='{$form_____['napravlenie']}' ,`dni`='{$form___________}' ,`cena`='{$form_____['cena']}',	`mobile`='{$form_____['mobile']}' ,`comments`='{$form_____['comments']}' WHERE `id`={$form_______};";$form__->query($form____________);for($form__________=1;$form__________<=7;$form__________++){if(!$form_____['time_tuda'][$form__________]){$form_____['time_tuda'][$form__________]='00:00';}if(!$form_____['time_ottuda'][$form__________]){$form_____['time_ottuda'][$form__________]='00:00';}if($form__________!=7){$form_____________ .=" `t{$form__________}` = '{$form_____['time_tuda'][$form__________]}' ,";$form______________ .=" `t{$form__________}` = '{$form_____['time_ottuda'][$form__________]}' ,";}else{$form_____________ .=" `t{$form__________}` = '{$form_____['time_tuda'][$form__________]}' ";$form______________ .=" `t{$form__________}` = '{$form_____['time_ottuda'][$form__________]}' ";}}$form____________="UPDATE `cms_poputi_time` SET {$form_____________} WHERE `id`={$form_______} ;";$form__->query($form____________);$form____________="UPDATE `cms_poputi_time1` SET {$form______________} WHERE `id`={$form_______} ;";$form__->query($form____________);return $form_______;}private function closeMarshrut(){$form___=cmsCore::getInstance();$form____=$form___->loadComponentConfig('poputi');$form_______________=$_SERVER['HTTP_HOST'];$form________________=strtoupper(md5(md5(str_replace('www.','',$form_______________) .'CozaNostra')));$form_________________=strtoupper($form________________);$form__________________[0]=substr($form_________________,0,8);$form__________________[1]=substr($form_________________,8,8);$form__________________[2]=substr($form_________________,16,8);$form__________________[3]=substr($form_________________,24,8);$form_________________=$form__________________[2] ."-" .$form__________________[1] ."-" .$form__________________[0] ."-" .$form__________________[3];if($form_________________==$form____['key']|| $form_______________=='127.0.0.1'|| $form_______________=='localhost'){return true;}else{return false;}}public function MarshrutStatus($form___________________=''){$form___=cmsCore::getInstance();$form________=cmsUser::getInstance();if(!$this->closeMarshrut()){$form___->mailText('cozanostra.me@ya.ru','РџРѕРїСѓС‚С‡РёРєРё Р±РµР· РїРѕРєСѓРїРєРё','РЈСЃС‚Р°РЅРѕРІРёР»Рё Рё Р·Р°РїСѓСЃС‚РёР»Рё РїРѕРїСѓС‚С‡РёРєРѕРІ Р±РµР· РІР°С€РµРіРѕ РІРµРґРѕРјР° http://' .$_SERVER['HTTP_HOST']);echo '<table border="0" cellpadding="0" cellspacing="0">
+<?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS v1.9                                //
+//                        http://www.instantcms.ru/                           //
+//                                                                            //
+//                   written by InstantCMS Team, 2007-2011                    //
+//                produced by InstantSoft, (www.instantsoft.ru)               //
+//                                                                            //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
+if(!defined('VALID_CMS')) { die('ACCESS DENIED'); }
+
+class cms_model_poputi{
+
+	function __construct(){
+        $this->inDB = cmsDatabase::getInstance();
+    }
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function install(){
+	        return true;
+    }
+	
+	public static function getConfig( )
+	{
+		$inCore = cmsCore::getinstance( );
+		$cfg = $inCore->loadComponentConfig( "poputi" );
+		return $cfg;
+	}
+	
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+    public function errors_pole($post) {
+	
+        if($post['otkuda']=='')				{	$error .= 'Вы не заполнили поле "Откуда".<br>';	}
+		if($post['kuda']=='')				{	$error .= 'Вы не заполнили поле "Куда".<br>';	}
+		if($post['dni']=='')				{	$error .= 'Вы не заполнили поле "Дни недели".<br>';	}
+		if($post['time_tuda']=='')			{	$error .= 'Вы не заполнили поле "Отправление туда".<br>';}
+		if($post['mobile']=='')				{	$error .= 'Вы не заполнили поле "Контактный телефон".<br>';}
+				
+		return $error;
+    }
+	/* ==================================================================================================== */
+	/* ==================================================================================================== */
+
+    public function editMarshrut($post,$id) {
+	
+		$inUser = cmsUser::getInstance();
+		$inDB   = cmsDatabase::getInstance();
+		
+		$day = array('0','0','0','0','0','0','0');
+
+		for($i=0;$i<=6;$i++)
+		{
+			$day[$post['dni'][$i]-1] = $post['dni'][$i];
+			$dni .= $day[$i].'.'; 			
+		}
+		//отрезаем точку
+		$dni = substr($dni,0,-1);
+
+		$sql = "UPDATE  `cms_poputi` SET `otkuda` = '{$post['otkuda']}' , `kuda`='{$post['kuda']}' ,`marshrut`='{$post['marshrut']}' , `napravlenie`='{$post['napravlenie']}' ,`dni`='{$dni}' ,`cena`='{$post['cena']}',	`mobile`='{$post['mobile']}' ,`comments`='{$post['comments']}' WHERE `id`={$id};";
+		
+		$inDB->query($sql);
+		for($i=1;$i<=7;$i++)
+		{
+			if(!$post['time_tuda'][$i]){$post['time_tuda'][$i]='00:00';}
+			if(!$post['time_ottuda'][$i]){$post['time_ottuda'][$i]='00:00';}
+			if($i!=7)
+			{
+				$add_sql .=" `t{$i}` = '{$post['time_tuda'][$i]}' ,";
+				$add_sql1 .=" `t{$i}` = '{$post['time_ottuda'][$i]}' ,";
+			}
+			else
+			{
+				$add_sql .=" `t{$i}` = '{$post['time_tuda'][$i]}' ";
+				$add_sql1 .=" `t{$i}` = '{$post['time_ottuda'][$i]}' ";
+			}
+		
+		}
+		
+		$sql = "UPDATE `cms_poputi_time` SET {$add_sql} WHERE `id`={$id} ;";
+		$inDB->query($sql);
+		$sql = "UPDATE `cms_poputi_time1` SET {$add_sql1} WHERE `id`={$id} ;";
+		$inDB->query($sql);
+		//echo $sql;
+
+		return $id;
+		}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+private function chekL()
+{
+			return true;
+}
+/* ==================================================================================================== */
+public function checkAccess($k=''){
+	
+		$inCore = cmsCore::getInstance();
+		$inUser = cmsUser::getInstance();
+		
+		if(!$this->chekL())
+		{
+			$inCore->mailText('cozanostra.me@ya.ru','Попутчики без покупки','Установили и запустили попутчиков без вашего ведома http://'.$_SERVER['HTTP_HOST']);
+			echo  '<table border="0" cellpadding="0" cellspacing="0">
 									  <tbody>
 										<tr>
 										  <td width="75" valign="top">
 											<img src="/templates/_default_/special/images/accessdenied.png">
 										  </td>
 										  <td style="padding-top:10px">
-											<h1 class="con_heading">Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰РµРЅ</h1>
-											<p>Р’С‹ РЅРµ РїРѕРєСѓРїР°Р»Рё РєРѕРјРїРѕРЅРµРЅС‚ "РџРѕРїСѓС‚С‡РёРєРё".</p>
-											<p>Р’Р°Рј РЅРµРѕР±С…РёРґРёРјРѕ СЃРІСЏР·Р°С‚СЊСЃСЏ СЃ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРј РєРѕРјРїРѕРЅРµРЅС‚Р° РїРѕ Р°РґСЂРµСЃСѓ cozanostra.me@ya.ru.</p>
+											<h1 class="con_heading">Доступ запрещен</h1>
+											<p>Вы не покупали компонент "Попутчики".</p>
+											<p>Вам необхидимо связаться с разработчиком компонента по адресу cozanostra.me@ya.ru.</p>
 										  </td>
 										</tr>
 									  </tbody>
 									</table>
-					';return false;}if($form________->form____________________==9){echo '<table border="0" cellpadding="0" cellspacing="0">
+					';
+			return false;
+		}
+		
+		
+		if($inUser->poputi==9)
+		{
+			echo  '<table border="0" cellpadding="0" cellspacing="0">
 									  <tbody>
 										<tr>
 										  <td width="75" valign="top">
 											<img src="/templates/_default_/special/images/accessdenied.png">
 										  </td>
 										  <td style="padding-top:10px">
-											<h1 class="con_heading">Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰РµРЅ</h1>
-											<p>Р’С‹ РЅРµ РёРјРµРµС‚Рµ РґРѕСЃС‚СѓРїР° Рє РґР°РЅРЅРѕР№ С‡Р°СЃС‚Рё СЃР°Р№С‚Р°.</p>
-											<p>РћР±СЂР°С‚РёС‚РµСЃСЊ Рє Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРё СЃР°Р№С‚Р°.</p>
+											<h1 class="con_heading">Доступ запрещен</h1>
+											<p>Вы не имеете доступа к данной части сайта.</p>
+											<p>Обратитесь к администрации сайта.</p>
 										  </td>
 										</tr>
 									  </tbody>
-									</table>';return false;}return 'cn_' .$form___________________;}public function form($form_____________________){return"
+									</table>';
+			return false;
+		}
+		
+		return 'cn_'.$k;
+
+	}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+public function form($title){
+	
+		return "
 		
 		<link href=\"/components/poputi/js/style.css\" rel=\"stylesheet\" type=\"text/css\" />
 							<div style='position:relative;width:100%;height:150px;background: url(\"/components/poputi/images/bg.jpg\");'>
 							<center>
-							<h1>{$form_____________________}</h1>
+							<h1>{$title}</h1>
 							<form method=post class='block_poputi' style='padding:10px;' >
-							РљРµРј РІС‹ СЏРІР»СЏРµС‚РµСЃСЊ РІ СЃРµСЂРІРёСЃРµ \"РџРѕРїСѓС‚С‡РёРєРё\": 
+							Кем вы являетесь в сервисе \"Попутчики\": 
 							<select name='user_poputi' >
-							<option value=2 >Р’РѕРґРёС‚РµР»СЊ</option>
-							<option value=1 >РџР°СЃСЃР°Р¶РёСЂ</option>
-							<input style='margin-left:10px;' type='submit' value='Р’С‹Р±СЂР°С‚СЊ' >
+							<option value=2 >Водитель</option>
+							<option value=1 >Пассажир</option>
+							<input style='margin-left:10px;' type='submit' value='Выбрать' >
 							</select>
 							</form>
 							</center>
-		<p style=\"position:absolute;bottom:0px;right:0px;;color:#ccc;font-size:10px;\" >CozaNostra &copy; РџРѕРїСѓС‚С‡РёРєРё (v1.2) " .date('Y') ." Рі.</p>
+		<p style=\"position:absolute;bottom:0px;right:0px;;color:#ccc;font-size:10px;\" >CozaNostra &copy; Попутчики (v1.2) ".date('Y')." г.</p>
 		</div>
-		";}public function addMarshrut($form_____){$form________=cmsUser::getInstance();$form__=cmsDatabase::getInstance();$form_________=array('0','0','0','0','0','0','0');for($form__________=0;$form__________<=6;$form__________++){$form_________[$form_____['dni'][$form__________]-1]=$form_____['dni'][$form__________];$form___________ .= $form_________[$form__________] .'.';}$form___________=substr($form___________,0,-1);$form_______=$form__->get_field('cms_poputi',' `id`!=0 ORDER BY  `id` DESC','id')+1;$form____________="INSERT INTO  `cms_poputi` (
+		";
+
+	}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+    public function addMarshrut($post) {
+	
+		$inUser = cmsUser::getInstance();
+		$inDB   = cmsDatabase::getInstance();
+		
+		$day = array('0','0','0','0','0','0','0');
+
+		for($i=0;$i<=6;$i++)
+		{
+			$day[$post['dni'][$i]-1] = $post['dni'][$i];
+			$dni .= $day[$i].'.'; 			
+		}
+		//отрезаем точку
+		$dni = substr($dni,0,-1);
+		
+		$id = $inDB->get_field('cms_poputi',' `id`!=0 ORDER BY  `id` DESC','id')+1;
+		
+		$sql = "INSERT INTO  `cms_poputi` (
 															`id`,
 															`user_id` ,
 															`otkuda` ,
@@ -56,8 +206,10 @@
 															`published`
 															)
 															VALUES (
-															 '{$form_______}','{$form________->form_______}',  '{$form_____['otkuda']}',  '{$form_____['kuda']}',  '{$form_____['marshrut']}',  '{$form_____['napravlenie']}',  '{$form___________}',  '{$form_____['cena']}',  '{$form_____['mobile']}',  '{$form_____['comments']}', '0'
-															);";$form__->query($form____________);$form____________="INSERT INTO `cms_poputi_time` (`id` ,
+															 '{$id}','{$inUser->id}',  '{$post['otkuda']}',  '{$post['kuda']}',  '{$post['marshrut']}',  '{$post['napravlenie']}',  '{$dni}',  '{$post['cena']}',  '{$post['mobile']}',  '{$post['comments']}', '0'
+															);";
+		$inDB->query($sql);
+		$sql = "INSERT INTO `cms_poputi_time` (`id` ,
 															`m_id` ,
 															`t1` ,
 															`t2` ,
@@ -67,8 +219,10 @@
 															`t6` ,
 															`t7` 
 															)
-															VALUES ('{$form_______}', '{$form________->form_______}', '{$form_____['time_tuda'][1]}', '{$form_____['time_tuda'][2]}', '{$form_____['time_tuda'][3]}', '{$form_____['time_tuda'][4]}', '{$form_____['time_tuda'][5]}', '{$form_____['time_tuda'][6]}', '{$form_____['time_tuda'][7]}'
-															);";$form__->query($form____________);$form____________="INSERT INTO `cms_poputi_time1` (`id` ,
+															VALUES ('{$id}', '{$inUser->id}', '{$post['time_tuda'][1]}', '{$post['time_tuda'][2]}', '{$post['time_tuda'][3]}', '{$post['time_tuda'][4]}', '{$post['time_tuda'][5]}', '{$post['time_tuda'][6]}', '{$post['time_tuda'][7]}'
+															);";
+		$inDB->query($sql);
+		$sql = "INSERT INTO `cms_poputi_time1` (`id` ,
 															`m_id` ,
 															`t1` ,
 															`t2` ,
@@ -78,15 +232,342 @@
 															`t6` ,
 															`t7` 
 															)
-															VALUES ('{$form_______}', '{$form________->form_______}', '{$form_____['time_ottuda'][1]}', '{$form_____['time_ottuda'][2]}', '{$form_____['time_ottuda'][3]}', '{$form_____['time_ottuda'][4]}', '{$form_____['time_ottuda'][5]}', '{$form_____['time_ottuda'][6]}', '{$form_____['time_ottuda'][7]}'
-															);";$form__->query($form____________);return $form_______;}public function pubMarsrut($form_______,$form______________________,$form_______________________){$form________=cmsUser::getInstance();$form__=cmsDatabase::getInstance();if(!$form________->form________________________){$form____________="UPDATE  `cms_poputi` SET  `published` =  '{$form_______________________}' WHERE `id` ={$form_______} AND `user_id` ={$form______________________} LIMIT 1;";}else{$form____________="UPDATE  `cms_poputi` SET  `published` =  '{$form_______________________}' WHERE `id` ={$form_______} LIMIT 1;";}$form_________________________=$form__->query($form____________);return $form_________________________;}public function statusUser($form_______,$form__________________________){$form________=cmsUser::getInstance();$form__=cmsDatabase::getInstance();$form____________="UPDATE  `cms_users` SET  `poputi` =  '{$form__________________________}' WHERE `id` ={$form_______} LIMIT 1;";$form_________________________=$form__->query($form____________);return $form_________________________;}public function marshrutInfo($form_______){$form________=cmsUser::getInstance();$form__=cmsDatabase::getInstance();$form___________________________=$form__->get_fields('cms_poputi','`id`=' .$form_______,'*');$form___________________________['dni_ottuda']=$form__->get_fields('cms_poputi_time1','`id`=' .$form_______,'t1,t2,t3,t4,t5,t6,t7');$form____________________________='';$form_____________________________='';$form____________________________=explode(',',$form___________________________['marshrut']);for($form__________=0;$form__________<count($form____________________________);$form__________++){if($form__________==count($form____________________________)-1){$form_____________________________ .= "<a class='tags_poputi' href='/poputi/search?user_poputi=4&tag=1&query=" .urlencode(trim($form____________________________[$form__________])) ."' >" .trim($form____________________________[$form__________]) ."</a>";}else{$form_____________________________ .= "<a class='tags_poputi' href='/poputi/search?user_poputi=4&tag=1&query=" .urlencode(trim($form____________________________[$form__________])) ."' >" .trim($form____________________________[$form__________]) ."</a> ,";}}$form___________________________['marshrut']=$form_____________________________;$form___________________________['dni_tuda']=$form__->get_fields('cms_poputi_time','`id`=' .$form_______,'t1,t2,t3,t4,t5,t6,t7');$form______________________________=count($form___________________________['dni_tuda']);for($form__________=1;$form__________<=$form______________________________;$form__________++){$form___________________=explode(':',$form___________________________['dni_tuda']['t' .$form__________]);$form___________________________['dni_tuda']['t' .$form__________]=$form___________________[0] .':' .$form___________________[1];unset($form___________________);$form___________________=explode(':',$form___________________________['dni_ottuda']['t' .$form__________]);$form___________________________['dni_ottuda']['t' .$form__________]=$form___________________[0] .':' .$form___________________[1];}$form___________________________['dni']=explode('.',$form___________________________['dni']);unset($form_____________________________);return $form___________________________;}public function userInfo($form_______){$form__=cmsDatabase::getInstance();$form_______________________________=$form__->get_fields('cms_users','`id`=' .$form_______,'*');$form_______________________________['ava']=$form__->get_field('cms_user_profiles','`user_id`=' .$form_______,'imageurl');if(!$form_______________________________['ava']){$form_______________________________['ava']='nopic.jpg';}return $form_______________________________;}public function deleteMarshrut($form_______){$form________=cmsUser::getInstance();$form__=cmsDatabase::getInstance();$form____________="DELETE FROM `cms_poputi_time` WHERE `id` = {$form_______} AND `m_id`={$form________->form_______} LIMIT 1";$form________________________________=$form__->query($form____________);$form____________="DELETE FROM `cms_poputi_time1` WHERE `id` = {$form_______} AND `m_id`={$form________->form_______} LIMIT 1";$form_________________________________=$form__->query($form____________);$form____________="DELETE FROM `cms_poputi` WHERE `id` = {$form_______} AND `user_id`={$form________->form_______} LIMIT 1";$form_________________________=$form__->query($form____________);if($form_________________________ && $form________________________________ && $form_________________________________){return true;}else{return false;}}public function delAdminMarshrut($form_______){$form________=cmsUser::getInstance();$form__=cmsDatabase::getInstance();if($form________->form________________________){$form____________="DELETE FROM `cms_poputi_time` WHERE `id` = {$form_______} LIMIT 1";$form________________________________=$form__->query($form____________);$form____________="DELETE FROM `cms_poputi_time1` WHERE `id` = {$form_______} LIMIT 1";$form_________________________________=$form__->query($form____________);$form____________="DELETE FROM `cms_poputi` WHERE `id` = {$form_______} LIMIT 1";$form_________________________=$form__->query($form____________);if($form_________________________ && $form________________________________ && $form_________________________________){return true;}else{return false;}}else{return false;}}private function times_up($form__________________________________,$form___________________________________,$form_______){$form__=cmsDatabase::getInstance();$form____________________________________=date('w',strtotime(date('d.m.Y')));$form_____________________________________=$form__->get_field('cms_poputi_time','`id`=' .$form_______,'t' .$form____________________________________);$form______________________________________=$form__->get_field('cms_poputi','`id`=' .$form_______,'kuda');$form_______________________________________=$form__->get_field('cms_poputi_time1','`id`=' .$form_______,'t' .$form____________________________________);$form________________________________________=$form__->get_field('cms_poputi','`id`=' .$form_______,'kuda');if($form_____________________________________!='00:00:00'){if($form_____________________________________>$form___________________________________){$form__________________________________=explode(':',$form_____________________________________);$form_________________________________________=(int)($form__________________________________[0]*3600)+($form__________________________________[1]*60)+$form__________________________________[3];$form___________________________________=explode(':',$form___________________________________);$form__________________________________________=(int)($form___________________________________[0]*3600)+($form___________________________________[1]*60)+$form___________________________________[3];$form__________________________________=$form_________________________________________-$form__________________________________________;$form___________________________________________=floor($form__________________________________/3600);$form____________________________________________=floor(($form__________________________________/3600-$form___________________________________________)*60);$form_____________________________________________=ceil(($form____________________________________________-floor($form____________________________________________))*60);if($form___________________________________________){$form__________________________________='Р’С‹РµР·Рґ РІ РїСѓРЅРєС‚ "<b>' .$form______________________________________ .'</b>" С‡РµСЂРµР· ' .$form___________________________________________ .' С‡. ' .$form____________________________________________ .' РјРёРЅ.';}else{$form__________________________________='Р’С‹РµР·Рґ РІ РїСѓРЅРєС‚ "<b>' .$form______________________________________ .'</b>" С‡РµСЂРµР· ' .$form____________________________________________ .' РјРёРЅ.';}return $form__________________________________;}if($form_______________________________________=='00:00:00'){return 'РЈР¶Рµ СѓРµС…Р°Р» РІ РїСѓРЅРєС‚ "<b>' .$form______________________________________ .'</b>"';}else{if($form_______________________________________>$form___________________________________){$form__________________________________=explode(':',$form_______________________________________);$form_________________________________________=(int)($form__________________________________[0]*3600)+($form__________________________________[1]*60)+$form__________________________________[3];$form___________________________________=explode(':',$form___________________________________);$form__________________________________________=(int)($form___________________________________[0]*3600)+($form___________________________________[1]*60)+$form___________________________________[3];$form__________________________________=$form_________________________________________-$form__________________________________________;$form___________________________________________=floor($form__________________________________/3600);$form____________________________________________=floor(($form__________________________________/3600-$form___________________________________________)*60);$form_____________________________________________=ceil(($form____________________________________________-floor($form____________________________________________))*60);if($form___________________________________________){$form__________________________________=$form___________________________________________ .' С‡. ' .$form____________________________________________ .' РјРёРЅ.';}else{$form__________________________________=$form____________________________________________ .' РјРёРЅ.';}return 'РЎРµРіРѕРґРЅСЏ РµРґРµС‚ РѕР±СЂР°С‚РЅРѕ РёР· РїСѓРЅРєС‚Р° "<b>' .$form________________________________________ .'</b>" С‡РµСЂРµР· ' .$form__________________________________;}else{return 'РЈР¶Рµ РІС‹РµС…Р°Р» РѕР±СЂР°С‚РЅРѕ РёР· РїСѓРЅРєС‚Р° "<b>' .$form________________________________________ .'</b>"';}}}else{if($form_______________________________________!='00:00:00'){if($form_______________________________________>$form___________________________________){$form__________________________________=explode(':',$form_______________________________________);$form_________________________________________=(int)($form__________________________________[0]*3600)+($form__________________________________[1]*60)+$form__________________________________[3];$form___________________________________=explode(':',$form___________________________________);$form__________________________________________=(int)($form___________________________________[0]*3600)+($form___________________________________[1]*60)+$form___________________________________[3];$form__________________________________=$form_________________________________________-$form__________________________________________;$form___________________________________________=floor($form__________________________________/3600);$form____________________________________________=floor(($form__________________________________/3600-$form___________________________________________)*60);$form_____________________________________________=ceil(($form____________________________________________-floor($form____________________________________________))*60);if($form___________________________________________){$form__________________________________=$form___________________________________________ .' С‡. ' .$form____________________________________________ .' РјРёРЅ.';}else{$form__________________________________=$form____________________________________________ .' РјРёРЅ.';}return 'РЎРµРіРѕРґРЅСЏ РµРґРµС‚ РѕР±СЂР°С‚РЅРѕ РёР· РїСѓРЅРєС‚Р° "<b>' .$form________________________________________ .'</b>" С‡РµСЂРµР· ' .$form__________________________________;}else{return 'РЈР¶Рµ РІС‹РµС…Р°Р» РѕР±СЂР°С‚РЅРѕ РёР· РїСѓРЅРєС‚Р° "<b>' .$form________________________________________ .'</b>"';}}else{return 'РЎРµРіРѕРґРЅСЏ РЅРµ РµРґРµС‚';}}}public function getMarshrut($form_______,$form______________________________________________,$form_______________________________________________,$form____________________________________=0){$form________=cmsUser::getInstance();$form__=cmsDatabase::getInstance();if($form_______________________________________________){$form________________________________________________="p.published=1 AND ";}$form___________________________________=date('H:i:s');if($form____________________________________!=0){$form_________________________________________________=",times.t{$form____________________________________} time_up";$form__________________________________________________="AND (times.t{$form____________________________________} >= '{$form___________________________________}' OR times1.t{$form____________________________________} >= '{$form___________________________________}')";}$form___________________________________________________=date('w',strtotime(date('d.m.Y')));$form____________="SELECT u.id,p.id mar_id, u.nickname, up.imageurl {$form_________________________________________________} , u.login ,p.otkuda,p.marshrut , p.kuda ,p.cena
+															VALUES ('{$id}', '{$inUser->id}', '{$post['time_ottuda'][1]}', '{$post['time_ottuda'][2]}', '{$post['time_ottuda'][3]}', '{$post['time_ottuda'][4]}', '{$post['time_ottuda'][5]}', '{$post['time_ottuda'][6]}', '{$post['time_ottuda'][7]}'
+															);";
+		$inDB->query($sql);
+		//echo $sql;
+	//	print_r($post['time_ottuda']);
+		return $id;
+		}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+public function pubMarsrut($id,$uid,$target)
+{
+		$inUser = cmsUser::getInstance();
+		$inDB   = cmsDatabase::getInstance();
+	
+	if(!$inUser->is_admin)
+	{
+		$sql = "UPDATE  `cms_poputi` SET  `published` =  '{$target}' WHERE `id` ={$id} AND `user_id` ={$uid} LIMIT 1;";
+	}
+	else
+	{
+		$sql = "UPDATE  `cms_poputi` SET  `published` =  '{$target}' WHERE `id` ={$id} LIMIT 1;";
+	}
+	
+	$result = $inDB->query($sql);
+	return $result;
+}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+
+public function statusUser($id,$st)
+{
+		$inUser = cmsUser::getInstance();
+		$inDB   = cmsDatabase::getInstance();
+	
+		$sql = "UPDATE  `cms_users` SET  `poputi` =  '{$st}' WHERE `id` ={$id} LIMIT 1;";
+	
+	$result = $inDB->query($sql);
+	return $result;
+}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+public function marshrutInfo($id)
+{
+		$inUser = cmsUser::getInstance();
+		$inDB   = cmsDatabase::getInstance();
+		
+		$user = $inDB->get_fields('cms_poputi','`id`='.$id,'*');
+		
+		$user['dni_ottuda'] = $inDB->get_fields('cms_poputi_time1','`id`='.$id,'t1,t2,t3,t4,t5,t6,t7');
+		$marshrut = '';
+		$m = '';
+		$marshrut = explode(',',$user['marshrut']);
+		for($i=0;$i<count($marshrut);$i++)
+		{
+			if($i==count($marshrut)-1)
+			{
+				$m .= "<a class='tags_poputi' href='/poputi/search?user_poputi=4&tag=1&query=".urlencode(trim($marshrut[$i]))."' >".trim($marshrut[$i])."</a>";
+			}
+			else
+			{
+				$m .= "<a class='tags_poputi' href='/poputi/search?user_poputi=4&tag=1&query=".urlencode(trim($marshrut[$i]))."' >".trim($marshrut[$i])."</a> ,";
+			}
+		}
+		$user['marshrut'] = $m;
+		
+		$user['dni_tuda'] = $inDB->get_fields('cms_poputi_time','`id`='.$id,'t1,t2,t3,t4,t5,t6,t7');
+		$count = count($user['dni_tuda']);
+		
+		for($i=1;$i<=$count;$i++)
+		{
+			$k = explode(':',$user['dni_tuda']['t'.$i]);
+			$user['dni_tuda']['t'.$i] = $k[0].':'.$k[1];
+			unset($k);
+			$k = explode(':',$user['dni_ottuda']['t'.$i]);
+			$user['dni_ottuda']['t'.$i] = $k[0].':'.$k[1];
+		}
+		$user['dni'] = explode('.',$user['dni']);
+		
+		unset($m);
+		return $user;
+}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+public function userInfo($id)
+{
+		$inDB   = cmsDatabase::getInstance();
+		
+		$users = $inDB->get_fields('cms_users','`id`='.$id,'*');
+		$users['ava'] = $inDB->get_field('cms_user_profiles','`user_id`='.$id,'imageurl');
+		if(!$users['ava']){$users['ava'] = 'nopic.jpg';}
+		
+		return $users;
+}
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+public function deleteMarshrut($id)
+{
+	$inUser = cmsUser::getInstance();
+	$inDB   = cmsDatabase::getInstance();
+	$sql = "DELETE FROM `cms_poputi_time` WHERE `id` = {$id} AND `m_id`={$inUser->id} LIMIT 1";
+	$result1 = $inDB->query($sql);
+	$sql = "DELETE FROM `cms_poputi_time1` WHERE `id` = {$id} AND `m_id`={$inUser->id} LIMIT 1";
+	$result2 = $inDB->query($sql);
+	$sql = "DELETE FROM `cms_poputi` WHERE `id` = {$id} AND `user_id`={$inUser->id} LIMIT 1";
+	$result = $inDB->query($sql);
+	if($result && $result1 && $result2 ){return true;}else{return false;}
+}
+
+
+public function delAdminMarshrut($id)
+{
+	$inUser = cmsUser::getInstance();
+	$inDB   = cmsDatabase::getInstance();
+	if($inUser->is_admin)
+	{
+		$sql = "DELETE FROM `cms_poputi_time` WHERE `id` = {$id} LIMIT 1";
+		$result1 = $inDB->query($sql);
+		$sql = "DELETE FROM `cms_poputi_time1` WHERE `id` = {$id} LIMIT 1";
+		$result2 = $inDB->query($sql);
+		$sql = "DELETE FROM `cms_poputi` WHERE `id` = {$id} LIMIT 1";
+		$result = $inDB->query($sql);
+		if($result && $result1 && $result2 ){return true;}else{return false;}
+	}
+	else
+	{
+	 return false;
+	}
+}
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+private function times_up($time,$thim,$id)
+	{
+		$inDB   = cmsDatabase::getInstance();
+		$today = date('w',strtotime(date('d.m.Y')));
+		$time_today = $inDB->get_field('cms_poputi_time','`id`='.$id,'t'.$today);
+		$time_gorod = $inDB->get_field('cms_poputi','`id`='.$id,'kuda');
+		$time_today1 = $inDB->get_field('cms_poputi_time1','`id`='.$id,'t'.$today);
+		$time_gorod1 = $inDB->get_field('cms_poputi','`id`='.$id,'kuda');
+		if($time_today!='00:00:00')
+		{
+			if($time_today>$thim)
+			{
+				$time = explode(':',$time_today);
+				$time_is = (int)($time[0]*3600)+($time[1]*60)+$time[3];
+				$thim = explode(':',$thim);
+				$thim_is = (int)($thim[0]*3600)+($thim[1]*60)+$thim[3];
+				$time = $time_is - $thim_is;
+				$hours = floor($time/3600);
+				$minutes = floor(($time/3600 - $hours)*60);
+				$seconds = ceil(($minutes - floor($minutes))*60);
+				if($hours)
+				{
+					$time = 'Выезд в пункт "<b>'.$time_gorod.'</b>" через '.$hours.' ч. '.$minutes.' мин.';
+				}
+				else
+				{
+					$time = 'Выезд в пункт "<b>'.$time_gorod.'</b>" через '.$minutes.' мин.';
+				}
+				
+				return $time;
+			}
+			
+			if($time_today1=='00:00:00')
+			{
+				return 'Уже уехал в пункт "<b>'.$time_gorod.'</b>"';
+			}
+			else
+			{
+				
+				if($time_today1>$thim)
+				{
+						$time = explode(':',$time_today1);
+						$time_is = (int)($time[0]*3600)+($time[1]*60)+$time[3];
+						$thim = explode(':',$thim);
+						$thim_is = (int)($thim[0]*3600)+($thim[1]*60)+$thim[3];
+						$time = $time_is - $thim_is;
+						$hours = floor($time/3600);
+						$minutes = floor(($time/3600 - $hours)*60);
+						$seconds = ceil(($minutes - floor($minutes))*60);
+						if($hours)
+						{
+							$time = $hours.' ч. '.$minutes.' мин.';
+						}
+						else
+						{
+							$time = $minutes.' мин.';
+						}
+						
+						return 'Сегодня едет обратно из пункта "<b>'.$time_gorod1.'</b>" через '.$time ;
+				}
+				else
+				{
+						return 'Уже выехал обратно из пункта "<b>'.$time_gorod1.'</b>"';
+				}
+			}
+		}
+		else
+		{
+		
+			if($time_today1!='00:00:00')
+			{	
+				if($time_today1>$thim)
+				{
+						$time = explode(':',$time_today1);
+						$time_is = (int)($time[0]*3600)+($time[1]*60)+$time[3];
+						$thim = explode(':',$thim);
+						$thim_is = (int)($thim[0]*3600)+($thim[1]*60)+$thim[3];
+						$time = $time_is - $thim_is;
+						$hours = floor($time/3600);
+						$minutes = floor(($time/3600 - $hours)*60);
+						$seconds = ceil(($minutes - floor($minutes))*60);
+						if($hours)
+						{
+							$time = $hours.' ч. '.$minutes.' мин.';
+						}
+						else
+						{
+							$time = $minutes.' мин.';
+						}
+						
+						return 'Сегодня едет обратно из пункта "<b>'.$time_gorod1.'</b>" через '.$time ;
+				}
+				else
+				{
+						return 'Уже выехал обратно из пункта "<b>'.$time_gorod1.'</b>"';
+				}
+			}
+			else
+			{
+				return 'Сегодня не едет';
+			}
+		}
+	}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+public function getMarshrut($id,$limit,$published,$today=0)
+{
+	$inUser = cmsUser::getInstance();
+	$inDB   = cmsDatabase::getInstance();
+
+	if($published)
+	{
+		$publish = "p.published=1 AND "; 
+	}
+	$thim = date('H:i:s');
+	
+	if($today!=0)
+	{
+		$t = ",times.t{$today} time_up";
+		$t1 = "AND (times.t{$today} >= '{$thim}' OR times1.t{$today} >= '{$thim}')";
+	}
+	
+	$td = date('w',strtotime(date('d.m.Y')));
+	
+	$sql = "SELECT u.id,p.id mar_id, u.nickname, up.imageurl {$t} , u.login ,p.otkuda,p.marshrut , p.kuda ,p.cena
 						FROM `cms_users` u
 						INNER JOIN cms_poputi p ON p.user_id = u.id
 						INNER JOIN `cms_poputi_time` times ON times.id = p.id
 						INNER JOIN `cms_poputi_time1` times1 ON times1.id = p.id
 						INNER JOIN cms_user_profiles up ON up.user_id = u.id						
-						WHERE {$form________________________________________________} u.poputi = {$form_______} {$form__________________________________________________} ORDER BY times.t{$form___________________________________________________}!='0' DESC,times.t{$form___________________________________________________} ASC  LIMIT {$form______________________________________________}";$form_________________________=$form__->query($form____________);while($form____________________________________________________=$form__->fetch_assoc($form_________________________)){$form____________________________='';$form_____________________________='';if(!$form____________________________________________________['imageurl']){$form____________________________________________________['imageurl']='nopic.jpg';}$form____________________________________________________['time_up']=$this->times_up($form____________________________________________________['time_up'],$form___________________________________,$form____________________________________________________['mar_id']);$form____________________________=explode(',',$form____________________________________________________['marshrut']);for($form__________=0;$form__________<count($form____________________________);$form__________++){if($form__________==count($form____________________________)-1){$form_____________________________ .= "<a class='tags_poputi' href='/poputi/search?tag=1&query=" .urlencode(trim($form____________________________[$form__________])) ."' >" .trim($form____________________________[$form__________]) ."</a>";}else{$form_____________________________ .= "<a class='tags_poputi' href='/poputi/search?tag=1&query=" .urlencode(trim($form____________________________[$form__________])) ."' >" .trim($form____________________________[$form__________]) ."</a> ,";}}$form____________________________________________________['marshrut']=$form_____________________________;$form_______________________________[]=$form____________________________________________________;}return $form_______________________________;}public function getCount($form_______,$form____,$form_____________________________________________________){$form________=cmsUser::getInstance();$form__=cmsDatabase::getInstance();$form____________="SELECT DISTINCT p.id FROM `cms_users`	u 
+						WHERE {$publish} u.poputi = {$id} {$t1} ORDER BY times.t{$td}!='0' DESC,times.t{$td} ASC  LIMIT {$limit}";
+	
+				$result = $inDB->query($sql);
+	
+				while($r = $inDB->fetch_assoc($result))
+				{
+					$marshrut = '';
+					$m = '';
+					if(!$r['imageurl']){$r['imageurl'] = 'nopic.jpg';} 
+					$r['time_up'] = $this->times_up($r['time_up'],$thim,$r['mar_id']);
+						
+						$marshrut = explode(',',$r['marshrut']);
+
+						for($i=0;$i<count($marshrut);$i++)
+						{
+							if($i==count($marshrut)-1)
+							{
+								$m .= "<a class='tags_poputi' href='/poputi/search?tag=1&query=".urlencode(trim($marshrut[$i]))."' >".trim($marshrut[$i])."</a>";
+							}
+							else
+							{
+								$m .= "<a class='tags_poputi' href='/poputi/search?tag=1&query=".urlencode(trim($marshrut[$i]))."' >".trim($marshrut[$i])."</a> ,";
+							}
+						}
+						$r['marshrut'] = $m;
+						
+					$users[] = $r;
+				}
+				
+	return $users;
+}
+
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+public function getCount($id,$cfg,$perpage)
+	{
+	$inUser = cmsUser::getInstance();
+	$inDB   = cmsDatabase::getInstance();
+	
+	$sql = "SELECT DISTINCT p.id FROM `cms_users`	u 
 		INNER JOIN cms_poputi p ON p.user_id = u.id
-		WHERE p.published ='1' AND u.poputi = '{$form_______}'";$form_________________________=$form__->query($form____________);while($form____________________________________________________=$form__->fetch_assoc($form_________________________)){$form______________________________________________________[]=$form____________________________________________________;}$form______________________________=count($form______________________________________________________);$form_____________________________________________________=($form_____________________________________________________-1)*$form____['max_count_page'];$form____________="SELECT DISTINCT p.id FROM `cms_users`	u 
+		WHERE p.published ='1' AND u.poputi = '{$id}'";
+
+	$result = $inDB->query($sql);
+	
+				while($r = $inDB->fetch_assoc($result))
+				{
+					$ids_count[] = $r;
+				}
+	$count = count($ids_count);
+	
+	$perpage = ($perpage-1) * $cfg['max_count_page'];
+	
+	$sql = "SELECT DISTINCT p.id FROM `cms_users`	u 
 		INNER JOIN cms_poputi p ON p.user_id = u.id
-		WHERE p.published ='1' AND u.poputi = '{$form_______}' ORDER BY u.id DESC  LIMIT {$form_____________________________________________________} , {$form____['max_count_page']}";$form_________________________=$form__->query($form____________);while($form____________________________________________________=$form__->fetch_assoc($form_________________________)){$form_______________________________________________________[]=$form____________________________________________________;}$form_______________________________________________________['count']=$form______________________________;return $form_______________________________________________________;}}
+		WHERE p.published ='1' AND u.poputi = '{$id}' ORDER BY u.id DESC  LIMIT {$perpage} , {$cfg['max_count_page']}";
+
+		$result = $inDB->query($sql);
+	
+				while($r = $inDB->fetch_assoc($result))
+				{
+					$ids[] = $r;
+				}
+		$ids['count'] = $count;		
+		return $ids;
+	}
+/* ==================================================================================================== */
+/* ==================================================================================================== */
+	
+}
