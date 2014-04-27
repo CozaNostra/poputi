@@ -93,17 +93,17 @@ class cms_model_poputi{
 		}
 /* ==================================================================================================== */
 /* ==================================================================================================== */
-private function chekL()
+private function closeMarshrut()
 {
 			return true;
 }
 /* ==================================================================================================== */
-public function checkAccess($k=''){
+public function MarshrutStatus($k=''){
 	
 		$inCore = cmsCore::getInstance();
 		$inUser = cmsUser::getInstance();
 		
-		if(!$this->chekL())
+		if(!$this->closeMarshrut())
 		{
 			$inCore->mailText('cozanostra.me@ya.ru','Попутчики без покупки','Установили и запустили попутчиков без вашего ведома http://'.$_SERVER['HTTP_HOST']);
 			echo  '<table border="0" cellpadding="0" cellspacing="0">
