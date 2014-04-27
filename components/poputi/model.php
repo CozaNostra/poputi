@@ -37,11 +37,11 @@ class cms_model_poputi{
 
     public function errors_pole($post) {
 	
-        if($post['otkuda']=='')				{	$error .= 'Вы не заполнили поле "Откуда".<br>';	}
-		if($post['kuda']=='')				{	$error .= 'Вы не заполнили поле "Куда".<br>';	}
-		if($post['dni']=='')				{	$error .= 'Вы не заполнили поле "Дни недели".<br>';	}
-		if($post['time_tuda']=='')			{	$error .= 'Вы не заполнили поле "Отправление туда".<br>';}
-		if($post['mobile']=='')				{	$error .= 'Вы не заполнили поле "Контактный телефон".<br>';}
+        if($post['otkuda']=='')				{	$error .= 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РїРѕР»Рµ "РћС‚РєСѓРґР°".<br>';	}
+		if($post['kuda']=='')				{	$error .= 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РїРѕР»Рµ "РљСѓРґР°".<br>';	}
+		if($post['dni']=='')				{	$error .= 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РїРѕР»Рµ "Р”РЅРё РЅРµРґРµР»Рё".<br>';	}
+		if($post['time_tuda']=='')			{	$error .= 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РїРѕР»Рµ "РћС‚РїСЂР°РІР»РµРЅРёРµ С‚СѓРґР°".<br>';}
+		if($post['mobile']=='')				{	$error .= 'Р’С‹ РЅРµ Р·Р°РїРѕР»РЅРёР»Рё РїРѕР»Рµ "РљРѕРЅС‚Р°РєС‚РЅС‹Р№ С‚РµР»РµС„РѕРЅ".<br>';}
 				
 		return $error;
     }
@@ -60,7 +60,7 @@ class cms_model_poputi{
 			$day[$post['dni'][$i]-1] = $post['dni'][$i];
 			$dni .= $day[$i].'.'; 			
 		}
-		//отрезаем точку
+		//РѕС‚СЂРµР·Р°РµРј С‚РѕС‡РєСѓ
 		$dni = substr($dni,0,-1);
 
 		$sql = "UPDATE  `cms_poputi` SET `otkuda` = '{$post['otkuda']}' , `kuda`='{$post['kuda']}' ,`marshrut`='{$post['marshrut']}' , `napravlenie`='{$post['napravlenie']}' ,`dni`='{$dni}' ,`cena`='{$post['cena']}',	`mobile`='{$post['mobile']}' ,`comments`='{$post['comments']}' WHERE `id`={$id};";
@@ -105,7 +105,7 @@ public function checkAccess($k=''){
 		
 		if(!$this->chekL())
 		{
-			$inCore->mailText('cozanostra.me@ya.ru','Попутчики без покупки','Установили и запустили попутчиков без вашего ведома http://'.$_SERVER['HTTP_HOST']);
+			$inCore->mailText('cozanostra.me@ya.ru','РџРѕРїСѓС‚С‡РёРєРё Р±РµР· РїРѕРєСѓРїРєРё','РЈСЃС‚Р°РЅРѕРІРёР»Рё Рё Р·Р°РїСѓСЃС‚РёР»Рё РїРѕРїСѓС‚С‡РёРєРѕРІ Р±РµР· РІР°С€РµРіРѕ РІРµРґРѕРјР° http://'.$_SERVER['HTTP_HOST']);
 			echo  '<table border="0" cellpadding="0" cellspacing="0">
 									  <tbody>
 										<tr>
@@ -113,9 +113,9 @@ public function checkAccess($k=''){
 											<img src="/templates/_default_/special/images/accessdenied.png">
 										  </td>
 										  <td style="padding-top:10px">
-											<h1 class="con_heading">Доступ запрещен</h1>
-											<p>Вы не покупали компонент "Попутчики".</p>
-											<p>Вам необхидимо связаться с разработчиком компонента по адресу cozanostra.me@ya.ru.</p>
+											<h1 class="con_heading">Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰РµРЅ</h1>
+											<p>Р’С‹ РЅРµ РїРѕРєСѓРїР°Р»Рё РєРѕРјРїРѕРЅРµРЅС‚ "РџРѕРїСѓС‚С‡РёРєРё".</p>
+											<p>Р’Р°Рј РЅРµРѕР±С…РёРґРёРјРѕ СЃРІСЏР·Р°С‚СЊСЃСЏ СЃ СЂР°Р·СЂР°Р±РѕС‚С‡РёРєРѕРј РєРѕРјРїРѕРЅРµРЅС‚Р° РїРѕ Р°РґСЂРµСЃСѓ cozanostra.me@ya.ru.</p>
 										  </td>
 										</tr>
 									  </tbody>
@@ -134,9 +134,9 @@ public function checkAccess($k=''){
 											<img src="/templates/_default_/special/images/accessdenied.png">
 										  </td>
 										  <td style="padding-top:10px">
-											<h1 class="con_heading">Доступ запрещен</h1>
-											<p>Вы не имеете доступа к данной части сайта.</p>
-											<p>Обратитесь к администрации сайта.</p>
+											<h1 class="con_heading">Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰РµРЅ</h1>
+											<p>Р’С‹ РЅРµ РёРјРµРµС‚Рµ РґРѕСЃС‚СѓРїР° Рє РґР°РЅРЅРѕР№ С‡Р°СЃС‚Рё СЃР°Р№С‚Р°.</p>
+											<p>РћР±СЂР°С‚РёС‚РµСЃСЊ Рє Р°РґРјРёРЅРёСЃС‚СЂР°С†РёРё СЃР°Р№С‚Р°.</p>
 										  </td>
 										</tr>
 									  </tbody>
@@ -159,15 +159,15 @@ public function form($title){
 							<center>
 							<h1>{$title}</h1>
 							<form method=post class='block_poputi' style='padding:10px;' >
-							Кем вы являетесь в сервисе \"Попутчики\": 
+							РљРµРј РІС‹ СЏРІР»СЏРµС‚РµСЃСЊ РІ СЃРµСЂРІРёСЃРµ \"РџРѕРїСѓС‚С‡РёРєРё\": 
 							<select name='user_poputi' >
-							<option value=2 >Водитель</option>
-							<option value=1 >Пассажир</option>
-							<input style='margin-left:10px;' type='submit' value='Выбрать' >
+							<option value=2 >Р’РѕРґРёС‚РµР»СЊ</option>
+							<option value=1 >РџР°СЃСЃР°Р¶РёСЂ</option>
+							<input style='margin-left:10px;' type='submit' value='Р’С‹Р±СЂР°С‚СЊ' >
 							</select>
 							</form>
 							</center>
-		<p style=\"position:absolute;bottom:0px;right:0px;;color:#ccc;font-size:10px;\" >CozaNostra &copy; Попутчики (v1.2) ".date('Y')." г.</p>
+		<p style=\"position:absolute;bottom:0px;right:0px;;color:#ccc;font-size:10px;\" >CozaNostra &copy; РџРѕРїСѓС‚С‡РёРєРё (v1.2) ".date('Y')." Рі.</p>
 		</div>
 		";
 
@@ -187,7 +187,7 @@ public function form($title){
 			$day[$post['dni'][$i]-1] = $post['dni'][$i];
 			$dni .= $day[$i].'.'; 			
 		}
-		//отрезаем точку
+		//РѕС‚СЂРµР·Р°РµРј С‚РѕС‡РєСѓ
 		$dni = substr($dni,0,-1);
 		
 		$id = $inDB->get_field('cms_poputi',' `id`!=0 ORDER BY  `id` DESC','id')+1;
@@ -393,11 +393,11 @@ private function times_up($time,$thim,$id)
 				$seconds = ceil(($minutes - floor($minutes))*60);
 				if($hours)
 				{
-					$time = 'Выезд в пункт "<b>'.$time_gorod.'</b>" через '.$hours.' ч. '.$minutes.' мин.';
+					$time = 'Р’С‹РµР·Рґ РІ РїСѓРЅРєС‚ "<b>'.$time_gorod.'</b>" С‡РµСЂРµР· '.$hours.' С‡. '.$minutes.' РјРёРЅ.';
 				}
 				else
 				{
-					$time = 'Выезд в пункт "<b>'.$time_gorod.'</b>" через '.$minutes.' мин.';
+					$time = 'Р’С‹РµР·Рґ РІ РїСѓРЅРєС‚ "<b>'.$time_gorod.'</b>" С‡РµСЂРµР· '.$minutes.' РјРёРЅ.';
 				}
 				
 				return $time;
@@ -405,7 +405,7 @@ private function times_up($time,$thim,$id)
 			
 			if($time_today1=='00:00:00')
 			{
-				return 'Уже уехал в пункт "<b>'.$time_gorod.'</b>"';
+				return 'РЈР¶Рµ СѓРµС…Р°Р» РІ РїСѓРЅРєС‚ "<b>'.$time_gorod.'</b>"';
 			}
 			else
 			{
@@ -422,18 +422,18 @@ private function times_up($time,$thim,$id)
 						$seconds = ceil(($minutes - floor($minutes))*60);
 						if($hours)
 						{
-							$time = $hours.' ч. '.$minutes.' мин.';
+							$time = $hours.' С‡. '.$minutes.' РјРёРЅ.';
 						}
 						else
 						{
-							$time = $minutes.' мин.';
+							$time = $minutes.' РјРёРЅ.';
 						}
 						
-						return 'Сегодня едет обратно из пункта "<b>'.$time_gorod1.'</b>" через '.$time ;
+						return 'РЎРµРіРѕРґРЅСЏ РµРґРµС‚ РѕР±СЂР°С‚РЅРѕ РёР· РїСѓРЅРєС‚Р° "<b>'.$time_gorod1.'</b>" С‡РµСЂРµР· '.$time ;
 				}
 				else
 				{
-						return 'Уже выехал обратно из пункта "<b>'.$time_gorod1.'</b>"';
+						return 'РЈР¶Рµ РІС‹РµС…Р°Р» РѕР±СЂР°С‚РЅРѕ РёР· РїСѓРЅРєС‚Р° "<b>'.$time_gorod1.'</b>"';
 				}
 			}
 		}
@@ -454,23 +454,23 @@ private function times_up($time,$thim,$id)
 						$seconds = ceil(($minutes - floor($minutes))*60);
 						if($hours)
 						{
-							$time = $hours.' ч. '.$minutes.' мин.';
+							$time = $hours.' С‡. '.$minutes.' РјРёРЅ.';
 						}
 						else
 						{
-							$time = $minutes.' мин.';
+							$time = $minutes.' РјРёРЅ.';
 						}
 						
-						return 'Сегодня едет обратно из пункта "<b>'.$time_gorod1.'</b>" через '.$time ;
+						return 'РЎРµРіРѕРґРЅСЏ РµРґРµС‚ РѕР±СЂР°С‚РЅРѕ РёР· РїСѓРЅРєС‚Р° "<b>'.$time_gorod1.'</b>" С‡РµСЂРµР· '.$time ;
 				}
 				else
 				{
-						return 'Уже выехал обратно из пункта "<b>'.$time_gorod1.'</b>"';
+						return 'РЈР¶Рµ РІС‹РµС…Р°Р» РѕР±СЂР°С‚РЅРѕ РёР· РїСѓРЅРєС‚Р° "<b>'.$time_gorod1.'</b>"';
 				}
 			}
 			else
 			{
-				return 'Сегодня не едет';
+				return 'РЎРµРіРѕРґРЅСЏ РЅРµ РµРґРµС‚';
 			}
 		}
 	}
